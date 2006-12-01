@@ -1,0 +1,28 @@
+== 0.4.1 / 2006-11-30
+
+* Fixed granting mysql privileges.
+
+== 0.4.0 / 2006-11-30
+
+* Added add_project.
+
+== 0.3.2 / 2006-11-30
+
+* Create the right mysql user.
+
+== 0.3.1 / 2006-11-30
+
+* chomp the mysql password.
+
+== 0.3.0 / 2006-11-30
+
+* Filtered out problematic characters from generated passwords.
+* Added run method so things will fail if a command fails.
+
+== 0.2.0 / 2006-11-30
+
+* Fixed UFO.generate_password.
+
+== 0.1.0 / 2006-11-30
+
+* Initial release.

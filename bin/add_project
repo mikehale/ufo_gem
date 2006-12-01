@@ -1,0 +1,15 @@
+require 'ufo'
+require 'cooloptions'
+
+options = CoolOptions.parse! do |o|
+  o.on :client, 'client CLIENT', 'Client to add the project for.'
+  o.on :project, 'project PROJECT', 'Project to create.'
+  o.after do |r|
+    error "Invalid client name" unless /\A\w+\z/ =~ r.client
+    error "Client doesn't exists" unless File.exist?("/var/www/#{r.client}")
+    error "Invalid project name" unless /\A\w+\z/ =~ r.project
+    error "Project already exists" if File.exists?("/var/www/#{r.client}/#{r.project}")
+  end
+end
+
+UFO.run(%(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create database #{options.client}_#{options.project}; grant all on #{options.client}_#{options.project}.* to #{options.client};"))

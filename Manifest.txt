@@ -1,0 +1,8 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/add_client
+bin/add_project
+lib/ufo.rb
+test/test_ufo.rb
