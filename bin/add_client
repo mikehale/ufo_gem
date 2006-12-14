@@ -2,22 +2,23 @@ require 'ufo'
 require 'cooloptions'
 
 options = CoolOptions.parse! do |o|
-  o.on :client, 'client CLIENT', 'Client to be added.'
-  o.on :password, 'password PASSWORD', 'Client password to be used.', UFO.generate_password
+  o.on 'client CLIENT', 'Client to be added.'
+  o.on 'password PASSWORD', 'Client password to be used.', UFO.generate_password
   o.after do |r|
-    error "Invalid client name" unless /\A\w+\z/ =~ r.client
-    error "Client already exists" if File.exist?("/var/www/#{r.client}")
-    error "Invalid password" if r.password.length < 8
+    o.error "Invalid client name" unless /\A\w+\z/ =~ r.client
+    o.error "Client already exists" if File.exist?("/var/www/#{r.client}")
+    o.error "Invalid password" if r.password.length < 8
   end
 end
 
-UFO.run(%(adduser --disabled-password --gecos '' #{options.client}))
-UFO.run(%(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create user #{options.client} identified by '#{options.password}'"))
-UFO.run(%(echo '#{options.password}' > /home/#{options.client}/.p))
-UFO.run(%(chmod 600 /home/#{options.client}/.p))
-UFO.run(%(mkdir /var/www/#{options.client}))
-UFO.run(%(chown #{options.client}:#{options.client} /var/www/#{options.client}))
-UFO.run(%(adduser www #{options.client}))
-UFO.run(%(mkdir -m 700 /home/#{options.client}/.ssh))
-UFO.run(%(touch /home/#{options.client}/.ssh/authorized_keys))
-UFO.run(%(chown -R #{options.client}:#{options.client} /home/#{options.client}/.ssh))
+UFO.run %(adduser --disabled-password --gecos '' #{options.client})
+UFO.run %(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create user #{options.client} identified by '#{options.password}'"), "Added mysql user."
+UFO.run %(echo '#{options.password}' > /home/#{options.client}/.p)
+UFO.run %(chmod 600 /home/#{options.client}/.p)
+UFO.run %(mkdir /var/www/#{options.client})
+UFO.run %(chown #{options.client}:#{options.client} /var/www/#{options.client})
+UFO.run %(adduser www #{options.client})
+UFO.run %(mkdir -m 700 /home/#{options.client}/.ssh)
+UFO.run %(touch /home/#{options.client}/.ssh/authorized_keys)
+UFO.run %(chown -R #{options.client}:#{options.client} /home/#{options.client}/.ssh)
+UFO.run %(echo '#{options.client} ALL=NOPASSWD: PROJECTS' >> /etc/sudoers)

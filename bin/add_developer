@@ -1,0 +1,26 @@
+require 'ufo'
+require 'cooloptions'
+
+options = CoolOptions.parse! do |o|
+  o.on 'developer DEVELOPER', 'Developer to be added.'
+  o.on 'key FILE_OR_STRING', 'Public key to be used (can also be passed on STDIN).', nil
+  o.after do |r|
+    o.error "Invalid developer name" unless /\A\w+\z/ =~ r.developer
+    o.error "Developer already exists" if File.exist?("/home/#{r.developer}")
+    if r.key
+      if File.exist?(r.key)
+        r.key = File.read(r.key)
+      end
+    else
+      r.key = STDIN.read
+    end
+    r.key.chomp!
+    o.error "Invalid key" unless /^ssh-\w+\s+[\w\/+]+==?\s+\S+$/ =~ r.key
+  end
+end
+
+UFO.run %(adduser --disabled-password --gecos '' #{options.developer})
+UFO.run %(mkdir -m 700 /home/#{options.developer}/.ssh)
+UFO.run %(touch /home/#{options.developer}/.ssh/authorized_keys)
+UFO.run %(chown -R #{options.developer}:#{options.developer} /home/#{options.developer}/.ssh)
+UFO.run %(echo '#{options.key}' >> /home/#{options.developer}/.ssh/authorized_keys)

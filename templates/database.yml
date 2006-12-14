@@ -1,0 +1,7 @@
+---
+production:
+  adapter: mysql
+  database: <%= client %>_<%= project %>
+  username: <%= client %>
+  password: "<%= database_password %>"
+  host: localhost

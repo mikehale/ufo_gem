@@ -1,0 +1,36 @@
+require 'ufo'
+require 'cooloptions'
+
+options = CoolOptions.parse! do |o|
+  o.on 'client CLIENT', 'Client to add the project for.'
+  o.on 'project PROJECT', 'Project to set up.'
+  o.on 'num-dispatchers NUM', 'Dispatchers to use.', 1
+  o.after do |r|
+    o.error "Invalid client name" unless /\A\w+\z/ =~ r.client
+    o.error "Client doesn't exists" unless File.exist?("/var/www/#{r.client}")
+    o.error "Invalid project name" unless /\A\w+\z/ =~ r.project
+    o.error "Project doesn't exist" unless File.exists?("/var/www/#{r.client}/#{r.project}")
+    r.num_dispatchers = r.num_dispatchers.to_i
+    o.error "Need at least one dispatcher" unless r.num_dispatchers > 0
+  end
+end
+
+def options.to_h
+  table
+end
+
+UFO.run(%(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create database #{options.client}_#{options.project}; grant all on #{options.client}_#{options.project}.* to #{options.client};"), "Created mysql database.")
+
+options.database_password = File.read("/home/#{options.client}/.p").chomp
+UFO.render "/var/www/#{options.client}/#{options.project}/shared/config/database.yml", 'database.yml', options.to_h
+
+num_already_setup = Dir['/etc/httpd/apps/*.conf'].reject{|e| /-enabled.conf$/ =~ e}.size
+options.first_port = 8000 + (num_already_setup * 5)
+options.ports = (options.first_port...(options.first_port + options.num_dispatchers)).to_a
+
+UFO.render "/etc/mongrel_cluster/#{options.client}_#{options.project}.yml", 'mongrel.yml', options.to_h
+
+conf = "/etc/httpd/apps/#{options.client}_#{options.project}"
+UFO.render "#{conf}.conf", 'httpd.conf', options.to_h
+UFO.run %(ln -s #{conf}.conf #{conf}-enabled.conf)
+UFO.run %(/etc/init.d/httpd restart)

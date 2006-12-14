@@ -1,0 +1,9 @@
+--- 
+user: <%= client %>
+cwd: /var/www/<%= client %>/<%= project %>/current/
+port: "<%= first_port %>"
+environment: production
+group: <%= client %>
+address: 127.0.0.1
+pid_file: log/mongrel.pid
+servers: <%= num_dispatchers %>

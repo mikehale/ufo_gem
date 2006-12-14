@@ -1,0 +1,14 @@
+require 'ufo'
+require 'cooloptions'
+
+options = CoolOptions.parse! do |o|
+  o.on 'client CLIENT', 'Client to add developer to.'
+  o.on 'developer DEVELOPER', 'Developer to add.'
+  o.after do |r|
+    o.error "Invalid client name" unless /\A\w+\z/ =~ r.client
+    o.error "Invalid developer name" unless /\A\w+\z/ =~ r.developer
+    o.error "Developer doesn't exist" unless File.exist?("/home/#{r.developer}")
+  end
+end
+
+UFO.run %(cat /home/#{options.developer}/.ssh/authorized_keys >> /home/#{options.client}/.ssh/authorized_keys)

@@ -3,6 +3,11 @@ Manifest.txt
 README.txt
 Rakefile
 bin/add_client
-bin/add_project
+bin/add_developer
+bin/add_developer_to_client
+bin/setup_project
 lib/ufo.rb
+templates/database.yml
+templates/httpd.conf
+templates/mongrel.yml
 test/test_ufo.rb
