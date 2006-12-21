@@ -15,6 +15,7 @@ UFO.run %(adduser --disabled-password --gecos '' #{options.client})
 UFO.run %(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create user #{options.client} identified by '#{options.password}'"), "Added mysql user."
 UFO.run %(echo '#{options.password}' > /home/#{options.client}/.p)
 UFO.run %(chmod 600 /home/#{options.client}/.p)
+UFO.run %(chown #{options.client}:#{options.client} /home/#{options.client}/.p)
 UFO.run %(mkdir /var/www/#{options.client})
 UFO.run %(chown #{options.client}:#{options.client} /var/www/#{options.client})
 UFO.run %(adduser www #{options.client})

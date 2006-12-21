@@ -5,6 +5,7 @@ options = CoolOptions.parse! do |o|
   o.on 'client CLIENT', 'Client to add the project for.'
   o.on 'project PROJECT', 'Project to set up.'
   o.on 'num-dispatchers NUM', 'Dispatchers to use.', 1
+  o.on 'domain DOMAIN', 'Domain to host on.', nil
   o.after do |r|
     o.error "Invalid client name" unless /\A\w+\z/ =~ r.client
     o.error "Client doesn't exists" unless File.exist?("/var/www/#{r.client}")
@@ -12,6 +13,7 @@ options = CoolOptions.parse! do |o|
     o.error "Project doesn't exist" unless File.exists?("/var/www/#{r.client}/#{r.project}")
     r.num_dispatchers = r.num_dispatchers.to_i
     o.error "Need at least one dispatcher" unless r.num_dispatchers > 0
+    o.error "Invalid domain" if r.domain and /\A\w+(\.\w+)*\z/ !~ r.domain
   end
 end
 
