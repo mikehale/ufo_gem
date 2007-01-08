@@ -6,6 +6,7 @@ options = CoolOptions.parse! do |o|
   o.on 'project PROJECT', 'Project to set up.'
   o.on 'num-dispatchers NUM', 'Dispatchers to use.', 1
   o.on 'domain DOMAIN', 'Domain to host on.', nil
+  o.on 'force', 'Force the setup, potentially overwriting.', false
   o.after do |r|
     o.error "Invalid client name" unless /\A\w+\z/ =~ r.client
     o.error "Client doesn't exists" unless File.exist?("/var/www/#{r.client}")
@@ -21,10 +22,15 @@ def options.to_h
   table
 end
 
+database_yml = "/var/www/#{options.client}/#{options.project}/shared/config/database.yml"
+unless options.force
+  raise "Project already set up" if File.exist?(database_yml)
+end
+
 UFO.run(%(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create database if not exists #{options.client}_#{options.project}; grant all on #{options.client}_#{options.project}.* to #{options.client};"), "Created mysql database.")
 
 options.database_password = File.read("/home/#{options.client}/.p").chomp
-UFO.render "/var/www/#{options.client}/#{options.project}/shared/config/database.yml", 'database.yml', options.to_h
+UFO.render database_yml, 'database.yml', options.to_h
 
 num_already_setup = Dir['/etc/httpd/apps/*.conf'].reject{|e| /-enabled.conf$/ =~ e}.size
 options.first_port = 8000 + (num_already_setup * 5)

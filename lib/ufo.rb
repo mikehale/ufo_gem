@@ -1,5 +1,5 @@
 class UFO
-  VERSION = '1.0.4'
+  VERSION = '1.0.5'
   PASSWORD_CHARACTERS = ((' '[0]..'~'[0]).to_a.collect{|e| e.chr} - %w(' " \\))
   
   def self.generate_password
@@ -16,7 +16,7 @@ class UFO
   end
   
   def self.render(to, template, options={})
-    raise "File already exists." if File.exist?(to)
+    raise "File already exists." if not options[:force] and File.exist?(to)
     template_file = File.join(File.dirname(__FILE__), '../templates', template)
     erb = ERB.new(File.read(template_file), 0, '-')
     b = Proc.new { binding }.call
