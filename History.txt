@@ -1,3 +1,7 @@
+== 1.0.4 / 2007-01-08
+
+* Really don't bomb if the DB is already there.
+
 == 1.0.3 / 2007-01-08
 
 * Don't bomb if the DB is already there.

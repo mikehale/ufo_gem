@@ -21,7 +21,7 @@ def options.to_h
   table
 end
 
-UFO.run(%(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create database #{options.client}_#{options.project} if not exists; grant all on #{options.client}_#{options.project}.* to #{options.client};"), "Created mysql database.")
+UFO.run(%(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create database if not exists #{options.client}_#{options.project}; grant all on #{options.client}_#{options.project}.* to #{options.client};"), "Created mysql database.")
 
 options.database_password = File.read("/home/#{options.client}/.p").chomp
 UFO.render "/var/www/#{options.client}/#{options.project}/shared/config/database.yml", 'database.yml', options.to_h
