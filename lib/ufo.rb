@@ -1,6 +1,6 @@
 class UFO
-  VERSION = '1.0.5'
-  PASSWORD_CHARACTERS = ((' '[0]..'~'[0]).to_a.collect{|e| e.chr} - %w(' " \\))
+  VERSION = '1.0.7'
+  PASSWORD_CHARACTERS = ((' '[0]..'~'[0]).to_a.collect{|e| e.chr} - %w(' " \\ `))
   
   def self.generate_password
     r = ''
@@ -9,7 +9,7 @@ class UFO
   end
   
   def self.run(command, message=nil)
-    puts(message ? message : "Running `#{command}`")
+    puts((message ? message : "Running `#{command}`"))
     puts(r = `#{command}`)
     raise "Command failed." unless $? == 0
     r
