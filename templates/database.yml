@@ -5,3 +5,4 @@ production:
   username: <%= client %>
   password: "<%= database_password %>"
   host: localhost
+  encoding: utf8

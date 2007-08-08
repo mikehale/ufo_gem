@@ -1,3 +1,7 @@
+== 1.0.8 / 2007-08-07
+
+* Added utf8 encoding to database.yml template.
+
 == 1.0.7 / 2007-01-17
 
 * Excluded yet another dangerous password character.
