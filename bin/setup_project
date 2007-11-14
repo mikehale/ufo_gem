@@ -32,8 +32,11 @@ UFO.run(%(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"create 
 options.database_password = File.read("/home/#{options.client}/.p").chomp
 UFO.render database_yml, 'database.yml', options.to_h
 
-num_already_setup = Dir['/etc/mongrel_cluster/*.yml'].size
-options.first_port = 8000 + (num_already_setup * 5)
+top_ports = (Dir['/etc/mongrel_cluster/*.yml'].collect do |f|
+  y = YAML.load(f)
+  y['port'].to_i + y['servers'].to_i - 1
+end + [7995])
+options.first_port = (top_ports.max + 5)
 options.ports = (options.first_port...(options.first_port + options.num_dispatchers)).to_a
 
 UFO.render "/etc/mongrel_cluster/#{options.client}_#{options.project}.yml", 'mongrel.yml', options.to_h
