@@ -1,4 +1,9 @@
-== 1.0.9 / 2007-08-07
+== 1.0.10 / 2007-11-14
+
+* Forgot to require YAML.
+* Update Capistrano version.
+
+== 1.0.9 / 2007-11-14
 
 * Sane port allocation.
 * Add clients to the mongrel group.

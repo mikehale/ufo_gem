@@ -1,5 +1,6 @@
 require 'ufo'
 require 'cooloptions'
+require 'yaml'
 
 options = CoolOptions.parse! do |o|
   o.on 'client CLIENT', 'Client to add the project for.'
