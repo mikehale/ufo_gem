@@ -1,3 +1,7 @@
+== 1.1 / 2007-11-14
+
+* Tweak mongrel.yml to match up with the new mongrel_cluster.
+
 == 1.0.11 / 2007-11-14
 
 * Apparently ERB was being required automagically for us before.

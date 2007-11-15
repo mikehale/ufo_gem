@@ -12,7 +12,7 @@ Hoe.new('ufo', UFO::VERSION) do |p|
   p.email = "nathaniel@terralien.com"
   p.extra_deps << ['cooloptions', '>= 1.0.0']
   p.extra_deps << ['capistrano', '>= 2.1.0']
-  p.extra_deps << ['spacesuit', '>= 1.0.1']
+  p.extra_deps << ['spacesuit', '>= 2.0.0']
 end
 
 namespace :remote do

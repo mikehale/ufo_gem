@@ -5,5 +5,5 @@ port: "<%= first_port %>"
 environment: production
 group: <%= client %>
 address: 127.0.0.1
-pid_file: log/mongrel.pid
+pid_file: /var/run/mongrel_cluster/<%= client %>_<%= project %>.pid
 servers: <%= num_dispatchers %>
