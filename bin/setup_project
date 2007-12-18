@@ -34,7 +34,7 @@ options.database_password = File.read("/home/#{options.client}/.p").chomp
 UFO.render database_yml, 'database.yml', options.to_h
 
 top_ports = (Dir['/etc/mongrel_cluster/*.yml'].collect do |f|
-  y = YAML.load(f)
+  y = YAML.load(File.read(f))
   y['port'].to_i + y['servers'].to_i - 1
 end + [7995])
 options.first_port = (top_ports.max + 5)

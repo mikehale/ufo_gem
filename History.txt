@@ -1,3 +1,7 @@
+== 1.1.1 / 2007-12-18
+
+* Fix calculation of available ports.
+
 == 1.1 / 2007-11-14
 
 * Tweak mongrel.yml to match up with the new mongrel_cluster.
