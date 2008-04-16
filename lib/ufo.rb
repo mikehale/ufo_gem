@@ -1,7 +1,7 @@
 require 'erb'
 
 class UFO
-  VERSION = '1.1.1'
+  VERSION = '1.2.0'
   PASSWORD_CHARACTERS = ((' '[0]..'~'[0]).to_a.collect{|e| e.chr} - %w(' " \\ `))
   
   def self.generate_password

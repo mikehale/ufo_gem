@@ -1,3 +1,7 @@
+== 1.2.0 / 2008-04-16
+
+* Generate an ssh keypair for new clients.
+
 == 1.1.1 / 2007-12-18
 
 * Fix calculation of available ports.
