@@ -1,3 +1,7 @@
+== 1.2.2 / 2008-06-27
+
+* Added teardown_project.
+
 == 1.2.1 / 2008-04-30
 
 * Output the public key.
