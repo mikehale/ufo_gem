@@ -45,4 +45,4 @@ UFO.render "/etc/mongrel_cluster/#{options.client}_#{options.project}.yml", 'mon
 conf = "/etc/httpd/apps/#{options.client}_#{options.project}"
 UFO.render "#{conf}.conf", 'httpd.conf', options.to_h
 UFO.run %(ln -s #{conf}.conf #{conf}-enabled.conf)
-UFO.run %(/etc/init.d/httpd restart)
+UFO.run %(apachectl graceful)

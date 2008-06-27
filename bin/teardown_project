@@ -1,0 +1,19 @@
+require 'ufo'
+require 'cooloptions'
+
+options = CoolOptions.parse! do |o|
+  o.on 'client CLIENT', 'Client that has the project.'
+  o.on 'project PROJECT', 'Project to teardown.'
+  o.after do |r|
+    o.error "Invalid client name" unless /\A\w+\z/ =~ r.client
+    o.error "Client doesn't exists" unless File.exist?("/var/www/#{r.client}")
+    o.error "Invalid project name" unless /\A\w+\z/ =~ r.project
+    o.error "Project doesn't exist" unless File.exists?("/var/www/#{r.client}/#{r.project}")
+  end
+end
+
+UFO.run %(mysql -u root --password=#{File.read('/etc/mysql/r').chomp} -e"drop database if exists #{options.client}_#{options.project};"), "Removed database."
+UFO.run %(rm /etc/mongrel_cluster/#{options.client}_#{options.project}.yml)
+UFO.run %(rm /etc/httpd/apps/#{options.client}_#{options.project}*)
+UFO.run %(rm -rf /var/www/#{options.client}/#{options.project}/)
+UFO.run %(apachectl graceful)
